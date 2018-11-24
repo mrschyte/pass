@@ -24,7 +24,7 @@ def cli(ctx, path):
 
 @cli.command()
 @click.pass_context
-def entries(ctx):
+def list(ctx):
     for entry in ctx.obj['kdbx'].entries:
         print('{} ({})'.format(entry.path, entry.username))
 
