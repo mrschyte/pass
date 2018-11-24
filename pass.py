@@ -38,7 +38,7 @@ def prompt(items, show=str):
         proc.stdin.flush()
         out = proc.stdout.read().decode('utf-8').rstrip()
         proc.wait()
-        idx, _ = tuple(out.split('\t'))
+        idx, _ = tuple(out.split('\t', 1))
     return items[int(idx[1:], 16)]
 
 @click.group()
