@@ -3,11 +3,11 @@
 import base64
 import click
 import os
+import pykeepass
 import pyperclip
 import subprocess
 import sys
 
-from pykeepass import PyKeePass
 from time import sleep
 from xdo import Xdo
 
@@ -32,7 +32,12 @@ def get_entry(kdbx, path=None):
             die('No entry was selected.')
         return entry
 
-    return kdbx.find_entries_by_path(path, first=True)
+    entry = kdbx.find_entries_by_path(path, first=True)
+
+    if type(entry) != pykeepass.entry.Entry:
+        die('Path "{}" is not a valid entry.'.format(path))
+
+    return entry
 
 def gpg_decrypt(path):
     null = open(os.devnull, 'w')
@@ -58,7 +63,7 @@ def cli(ctx, path):
     mkey = gpg_decrypt('{}.gpg'.format(os.path.splitext(path)[0])).decode('utf-8')
     ctx.obj['path'] = path
     ctx.obj['mkey'] = mkey
-    ctx.obj['kdbx'] = PyKeePass(path, mkey)
+    ctx.obj['kdbx'] = pykeepass.PyKeePass(path, mkey)
 
 @cli.command()
 @click.option('--user/--no-user', default=False)
