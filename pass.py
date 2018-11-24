@@ -57,13 +57,6 @@ def list(ctx):
         print('{} ({})'.format(entry.path, entry.username))
 
 @cli.command()
-@click.argument('title')
-@click.pass_context
-def search(ctx, title):
-    for entry in ctx.obj['kdbx'].find_entries_by_title(title):
-        print('{} ({})'.format(entry.path, entry.username))
-
-@cli.command()
 @click.option('--user/--no-user', default=False)
 @click.option('--path', default=None)
 @click.pass_context
