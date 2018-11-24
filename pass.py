@@ -21,9 +21,16 @@ def clip(text, timeout=30):
             pyperclip.copy(orig)
         sys.exit(0)
 
+def die(message):
+    print('ERROR: {}'.format(message), file=sys.stderr)
+    sys.exit(1)
+
 def get_entry(kdbx, path=None):
     if path == None:
-        return prompt(kdbx.entries, show=lambda e: "{} ({})".format(e.path, e.username))
+        entry = prompt(kdbx.entries, show=lambda e: "{} ({})".format(e.path, e.username))
+        if entry == None:
+            die('No entry was selected.')
+        return entry
 
     return kdbx.find_entries_by_path(path, first=True)
 
