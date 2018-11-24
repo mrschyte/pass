@@ -1,3 +1,4 @@
-pykeepass==3.0.2
-python_libxdo==0.1.2a1
 Click==7.0
+python_libxdo==0.1.2a1
+pykeepass==3.0.2
+pyperclip==1.7.0
