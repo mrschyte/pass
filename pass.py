@@ -8,6 +8,22 @@ import base64
 from pykeepass import PyKeePass
 from xdo import Xdo
 
+def prompt(items, show=str):
+    indexed = ['#{0:04x}\t{1}'.format(idx, show(item)) for idx, item in enumerate(items)]
+    with subprocess.Popen('/usr/bin/fzf', stdin=subprocess.PIPE, stdout=subprocess.PIPE) as proc:
+        proc.stdin.write(os.linesep.join(indexed).encode('utf-8'))
+        proc.stdin.flush()
+        out = proc.stdout.read().decode('utf-8').rstrip()
+        proc.wait()
+        idx, _ = tuple(out.split('\t'))
+    return items[int(idx[1:], 16)]
+
+def get_entry(kdbx, path=None):
+    if path == None:
+        return prompt(kdbx.entries, show=lambda e: "{} ({})".format(e.path, e.username))
+
+    return kdbx.find_entries_by_path(path, first=True)
+
 def gpg_decrypt(path):
     null = open(os.devnull, 'w')
     return subprocess.check_output(['/usr/bin/gpg', '-d', path], stderr=null).rstrip(b'\n')
@@ -37,10 +53,10 @@ def search(ctx, title):
 
 @cli.command()
 @click.option('--user/--no-user', default=False)
-@click.argument('path')
+@click.option('--path', default=None)
 @click.pass_context
-def show(ctx, path, user):
-    entry = ctx.obj['kdbx'].find_entries_by_path(path, first=True)
+def show(ctx, user, path):
+    entry = get_entry(ctx.obj['kdbx'], path)
     if user:
         print(entry.username)
     print(entry.password)
