@@ -3,9 +3,12 @@
 import click
 import subprocess
 import os
+import sys
 import base64
+import pyperclip
 
 from pykeepass import PyKeePass
+from time import sleep
 from xdo import Xdo
 
 def prompt(items, show=str):
@@ -23,6 +26,15 @@ def get_entry(kdbx, path=None):
         return prompt(kdbx.entries, show=lambda e: "{} ({})".format(e.path, e.username))
 
     return kdbx.find_entries_by_path(path, first=True)
+
+def clip(text, timeout=30):
+    orig = pyperclip.paste()
+    pyperclip.copy(text)
+    newpid = os.fork()
+    if newpid == 0:
+        sleep(timeout)
+        pyperclip.copy(orig)
+        sys.exit(0)
 
 def gpg_decrypt(path):
     null = open(os.devnull, 'w')
@@ -60,6 +72,18 @@ def show(ctx, user, path):
     if user:
         print(entry.username)
     print(entry.password)
+
+@cli.command()
+@click.option('--user/--no-user', default=False)
+@click.option('--path', default=None)
+@click.pass_context
+def copy(ctx, user, path):
+    entry = get_entry(ctx.obj['kdbx'], path)
+    if user:
+        clip(os.newline.join([entry.username, entry.password]))
+    else:
+        clip(entry.password)
+    print('The password for {} is copied to the clipboard and is erased in {} seconds.'.format(entry.path, 30))
 
 @cli.command()
 @click.pass_context
