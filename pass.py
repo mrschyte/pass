@@ -20,7 +20,7 @@ def cli(ctx, path):
     mkey = gpg_decrypt('{}.gpg'.format(os.path.splitext(path)[0])).decode('utf-8')
     ctx.obj['path'] = path
     ctx.obj['mkey'] = mkey
-    ctx.obj['kdbx'] = PyKeePass('{}/.passwords.kdbx'.format(os.environ['HOME']), mkey)
+    ctx.obj['kdbx'] = PyKeePass(path, mkey)
 
 @cli.command()
 @click.pass_context
