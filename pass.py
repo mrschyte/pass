@@ -75,7 +75,7 @@ def copy(ctx, user, path):
         clip(os.linesep.join([entry.username, entry.password]))
     else:
         clip(entry.password)
-    print('The password for {} is copied to the clipboard and is erased in {} seconds.'.format(entry.path, 30))
+    print('The password for "{}" is copied to the clipboard and is erased in {} seconds.'.format(entry.path, 30))
 
 @cli.command()
 @click.pass_context
