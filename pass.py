@@ -72,7 +72,7 @@ def cli(ctx, path):
 def copy(ctx, user, path):
     entry = get_entry(ctx.obj['kdbx'], path)
     if user:
-        clip(os.newline.join([entry.username, entry.password]))
+        clip(os.linesep.join([entry.username, entry.password]))
     else:
         clip(entry.password)
     print('The password for {} is copied to the clipboard and is erased in {} seconds.'.format(entry.path, 30))
