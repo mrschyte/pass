@@ -28,8 +28,8 @@ def die(message):
 def get_entry(kdbx, path=None):
     if path == None:
         entry = prompt(kdbx.entries, show=lambda e: "{} ({})".format(e.path, e.username))
-        if entry == None:
-            die('No entry was selected.')
+        if type(entry) != pykeepass.entry.Entry:
+            die('No valid entry was selected.')
         return entry
 
     entry = kdbx.find_entries_by_path(path, first=True)
