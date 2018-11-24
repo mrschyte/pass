@@ -17,7 +17,8 @@ def clip(text, timeout=30):
     newpid = os.fork()
     if newpid == 0:
         sleep(timeout)
-        pyperclip.copy(orig)
+        if text in pyperclip.paste():
+            pyperclip.copy(orig)
         sys.exit(0)
 
 def get_entry(kdbx, path=None):
