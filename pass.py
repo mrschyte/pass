@@ -38,6 +38,8 @@ def prompt(items, show=str):
         proc.stdin.flush()
         out = proc.stdout.read().decode('utf-8').rstrip()
         proc.wait()
+        if '\t' not in out:
+            return None
         idx, _ = tuple(out.split('\t', 1))
     return items[int(idx[1:], 16)]
 
