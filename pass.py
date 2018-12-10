@@ -7,6 +7,7 @@ import pykeepass
 import pyperclip
 import subprocess
 import sys
+import tabulate
 
 from time import sleep
 from xdo import Xdo
@@ -85,13 +86,23 @@ def list(ctx):
 
 @cli.command()
 @click.option('--user/--no-user', default=False)
+@click.option('--details/--no-details', default=False)
 @click.option('--path', default=None)
 @click.pass_context
-def show(ctx, user, path):
+def show(ctx, user, details, path):
     entry = get_entry(ctx.obj['kdbx'], path)
-    if user:
+    if details: # show all details of the entry
+        print(tabulate.tabulate([
+            ['Title', entry.title],
+            ['Username', entry.username],
+            ['Password', entry.password],
+            ['URL', entry.url],
+            ['Notes', entry.notes]
+            ]))
+    elif user: # show username and password
         print(entry.username)
-    print(entry.password)
+    else: # show only password
+        print(entry.password)
 
 @cli.command()
 @click.pass_context
