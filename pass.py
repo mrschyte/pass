@@ -96,6 +96,7 @@ def show(ctx, user, details, path):
             ['Title', entry.title],
             ['Username', entry.username],
             ['Password', entry.password],
+            ['Expiry', entry.expiry_time],
             ['URL', entry.url],
             ['Notes', entry.notes]
             ]))
