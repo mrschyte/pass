@@ -101,6 +101,7 @@ def show(ctx, user, details, path):
             ]))
     elif user: # show username and password
         print(entry.username)
+        print(entry.password)
     else: # show only password
         print(entry.password)
 
