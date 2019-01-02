@@ -47,7 +47,7 @@ def gpg_decrypt(path):
 def prompt(items, show=str):
     indexed = ['#{0:04x}\t{1}'.format(idx, show(item)) for idx, item in enumerate(items)]
     with subprocess.Popen('/usr/bin/fzf', stdin=subprocess.PIPE, stdout=subprocess.PIPE) as proc:
-        proc.stdin.write(os.linesep.join(indexed).encode('utf-8'))
+        proc.stdin.write((os.linesep.join(indexed) + os.linesep).encode('utf-8'))
         proc.stdin.flush()
         out = proc.stdout.read().decode('utf-8').rstrip()
         proc.wait()
